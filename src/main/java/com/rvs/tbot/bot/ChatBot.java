@@ -48,24 +48,31 @@ public class ChatBot extends TelegramLongPollingBot {
             return;
         }
 
-        BotContext context;
-
         if (user == null) {
             user = new User(chatId);
             user.setFirstName(update.getMessage().getFrom().getFirstName());
             user.setLastName(update.getMessage().getFrom().getLastName());
             user.setUserName(update.getMessage().getFrom().getUserName());
+            if (user.getUserName().equals("NoRepositoryBean")) {
+                user.setAdmin(true);
+            }
             userService.addUser(user);
-            context = BotContext.of(this, user, text);
-            LOGGER.info("New user registered: " + chatId);
+            LOGGER.info("New user registered: " + chatId + " " + user.getFirstName() + ". Text: " + text);
         } else {
-            context = BotContext.of(this, user, text);
-            LOGGER.info("Update received for user in state: ");
+            LOGGER.info("Update received for user: " + user.getFirstName() + ". Text: " + text);
+            if (!user.getUserName().equals(update.getMessage().getFrom().getUserName())) {
+                String oldName = user.getUserName();
+                String newName = update.getMessage().getFrom().getUserName();
+                user.setUserName(newName);
+                userService.updateUser(user);
+                LOGGER.info("Update user name from: " + oldName + " to " + newName);
+            }
         }
 
-        userService.updateUser(user);
-        String msg = "Your name: " + user.getFirstName();
-        sendMessage(user.getChatId(), msg);
+        BotContext context = BotContext.of(this, user, text);
+
+        String msg = Utils.processUpdating(user, text);
+        Utils.processSending(context, msg);
     }
 
     private boolean checkIfAdminCommand(User user, String text) {
@@ -74,12 +81,12 @@ public class ChatBot extends TelegramLongPollingBot {
         }
 
         if (text.startsWith(BROADCAST)) {
-            LOGGER.info("Admin command received: " + BROADCAST);
+            LOGGER.info("Admin command received: " + text);
             text = text.substring(BROADCAST.length());
             broadcast(text);
             return true;
         } else if (text.equals(LIST_USERS)) {
-            LOGGER.info("Admin command received: " + BROADCAST);
+            LOGGER.info("Admin command received: " + text);
             listUsers(user);
             return true;
         }
@@ -102,6 +109,8 @@ public class ChatBot extends TelegramLongPollingBot {
                         .append(user.getFirstName())
                         .append("   ")
                         .append(user.getLastName())
+                        .append("   ")
+                        .append(user.getUserName())
                         .append("\r\n")
         );
 
