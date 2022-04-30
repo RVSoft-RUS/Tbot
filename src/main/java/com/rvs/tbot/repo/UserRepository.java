@@ -8,8 +8,8 @@ import java.util.List;
 
 public interface UserRepository extends JpaRepository<User, Long> {
     @Query("select u from User u where u.notified = false " +
-        "and u.phone IS NOT NULL and u.email IS NOT NULL ")
+        "and u.firstName IS NOT NULL and u.lastName IS NOT NULL ")
     List<User> findNewUsers();
 
-    User findByChatId(Long id);
+    User findByChatId(String id);
 }

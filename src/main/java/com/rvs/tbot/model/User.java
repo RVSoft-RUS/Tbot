@@ -11,21 +11,28 @@ public class User {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    private Long chatId;
-    private Long stateId;
-    private String phone;
-    private String email;
+    private String chatId;
+    private String firstName;
+    private String lastName;
+    private String userName;
+
+    public String getUserName() {
+        return userName;
+    }
+
+    public void setUserName(String userName) {
+        this.userName = userName;
+    }
+
     private Boolean admin;
     private Boolean notified = false;
 
-    public User(Long chatId, Long stateId) {
+    public User(String chatId) {
         this.chatId = chatId;
-        this.stateId = stateId;
     }
 
-    public User(Long chatId, Long stateId, Boolean admin) {
+    public User(String chatId, Boolean admin) {
         this.chatId = chatId;
-        this.stateId = stateId;
         this.admin = admin;
     }
 
@@ -40,36 +47,28 @@ public class User {
         this.id = id;
     }
 
-    public Long getChatId() {
+    public String getChatId() {
         return chatId;
     }
 
-    public void setChatId(Long chatId) {
+    public void setChatId(String chatId) {
         this.chatId = chatId;
     }
 
-    public Long getStateId() {
-        return stateId;
+    public String getFirstName() {
+        return firstName;
     }
 
-    public void setStateId(Long stateId) {
-        this.stateId = stateId;
+    public void setFirstName(String phone) {
+        this.firstName = phone;
     }
 
-    public String getPhone() {
-        return phone;
+    public String getLastName() {
+        return lastName;
     }
 
-    public void setPhone(String phone) {
-        this.phone = phone;
-    }
-
-    public String getEmail() {
-        return email;
-    }
-
-    public void setEmail(String email) {
-        this.email = email;
+    public void setLastName(String email) {
+        this.lastName = email;
     }
 
     public Boolean getAdmin() {
