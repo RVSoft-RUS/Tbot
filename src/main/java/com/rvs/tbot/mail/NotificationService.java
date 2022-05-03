@@ -11,8 +11,8 @@ import org.springframework.stereotype.Component;
 
 import java.util.List;
 
-@Component
-@PropertySource("classpath:telegram.properties")
+//@Component
+//@PropertySource("classpath:telegram.properties")
 public class NotificationService {
     private final UserService userService;
     private final JavaMailSender emailSender;

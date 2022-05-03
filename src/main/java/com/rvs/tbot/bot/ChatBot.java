@@ -48,7 +48,10 @@ public class ChatBot extends TelegramLongPollingBot {
             return;
         }
 
+        boolean newUser = false;
+
         if (user == null) {
+            newUser = true;
             user = new User(chatId);
             user.setFirstName(update.getMessage().getFrom().getFirstName());
             user.setLastName(update.getMessage().getFrom().getLastName());
@@ -73,6 +76,10 @@ public class ChatBot extends TelegramLongPollingBot {
 
         String msg = Utils.processUpdating(user, text);
         Utils.processSending(context, msg);
+        if (newUser) {
+            msg = Utils.processUpdating(user, "help");
+            Utils.processSending(context, msg);
+        }
     }
 
     private boolean checkIfAdminCommand(User user, String text) {
